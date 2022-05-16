@@ -90,6 +90,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar>
   late Animation<double> _widthAnimation;
   late CurvedAnimation _curvedAnimation;
   late double tempWidth;
+  OverlayEntry? entry;
 
   var _isCollapsed;
   late double _currWidth,
@@ -181,163 +182,99 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar>
     return MediaQuery.of(context).size.width > 900
         ? Row(
             children: [
-              Padding(
-                padding: EdgeInsets.all(widget.screenPadding),
-                child: GestureDetector(
-                  onHorizontalDragUpdate: _onHorizontalDragUpdate,
-                  onHorizontalDragEnd: _onHorizontalDragEnd,
-                  child: CollapsibleContainer(
-                    height: widget.height,
-                    width: _currWidth,
-                    padding: widget.padding,
-                    borderRadius: widget.borderRadius,
-                    color: widget.backgroundColor,
-                    sidebarBoxShadow: widget.sidebarBoxShadow ??
-                        [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 4,
-                            spreadRadius: 0.01,
-                            offset: Offset(3, 3),
-                          ),
-                        ],
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _avatar,
-                        SizedBox(
-                          height: widget.topPadding,
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
-                            reverse: widget.fitItemsToBottom,
-                            child: Stack(
-                              children: [
-                                CollapsibleItemSelection(
-                                  height: _maxOffsetY,
-                                  offsetY: _maxOffsetY * _selectedItemIndex,
-                                  color: widget.selectedIconBox,
-                                  duration: widget.duration,
-                                  curve: widget.curve,
-                                ),
-                                Column(
-                                  children: _items,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: widget.bottomPadding,
-                        ),
-                        widget.showToggleButton
-                            ? Divider(
-                                color: widget.unselectedIconColor,
-                                indent: 5,
-                                endIndent: 5,
-                                thickness: 1,
-                              )
-                            : SizedBox(
-                                height: 5,
-                              ),
-                        widget.showToggleButton
-                            ? _toggleButton
-                            : SizedBox(
-                                height: widget.iconSize,
-                              ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              drawer,
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: widget.minWidth * 1.1),
-                  child: widget.body,
-                ),
+                child: body,
               ),
             ],
           )
         : Stack(
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: widget.minWidth * 1.1),
-                child: widget.body,
-              ),
-              Padding(
-                padding: EdgeInsets.all(widget.screenPadding),
-                child: GestureDetector(
-                  onHorizontalDragUpdate: _onHorizontalDragUpdate,
-                  onHorizontalDragEnd: _onHorizontalDragEnd,
-                  child: CollapsibleContainer(
-                    height: widget.height,
-                    width: _currWidth,
-                    padding: widget.padding,
-                    borderRadius: widget.borderRadius,
-                    color: widget.backgroundColor,
-                    sidebarBoxShadow: widget.sidebarBoxShadow ?? [BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  blurRadius: 4,
-                  spreadRadius: 0.01,
-                  offset: Offset(3, 3),
-                ),],
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _avatar,
-                        SizedBox(
-                          height: widget.topPadding,
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
-                            reverse: widget.fitItemsToBottom,
-                            child: Stack(
-                              children: [
-                                CollapsibleItemSelection(
-                                  height: _maxOffsetY,
-                                  offsetY: _maxOffsetY * _selectedItemIndex,
-                                  color: widget.selectedIconBox,
-                                  duration: widget.duration,
-                                  curve: widget.curve,
-                                ),
-                                Column(
-                                  children: _items,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: widget.bottomPadding,
-                        ),
-                        widget.showToggleButton
-                            ? Divider(
-                                color: widget.unselectedIconColor,
-                                indent: 5,
-                                endIndent: 5,
-                                thickness: 1,
-                              )
-                            : SizedBox(
-                                height: 5,
-                              ),
-                        widget.showToggleButton
-                            ? _toggleButton
-                            : SizedBox(
-                                height: widget.iconSize,
-                              ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              body,
+              drawer,
             ],
           );
   }
 
+  Widget get drawer => Padding(
+        padding: EdgeInsets.all(widget.screenPadding),
+        child: GestureDetector(
+          onHorizontalDragUpdate: _onHorizontalDragUpdate,
+          onHorizontalDragEnd: _onHorizontalDragEnd,
+          child: CollapsibleContainer(
+            height: widget.height,
+            width: _currWidth,
+            padding: widget.padding,
+            borderRadius: widget.borderRadius,
+            color: widget.backgroundColor,
+            sidebarBoxShadow: widget.sidebarBoxShadow ??
+                [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 4,
+                    spreadRadius: 0.01,
+                    offset: Offset(3, 3),
+                  ),
+                ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _avatar,
+                SizedBox(
+                  height: widget.topPadding,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    reverse: widget.fitItemsToBottom,
+                    child: Stack(
+                      children: [
+                        CollapsibleItemSelection(
+                          height: _maxOffsetY,
+                          offsetY: _maxOffsetY * _selectedItemIndex,
+                          color: widget.selectedIconBox,
+                          duration: widget.duration,
+                          curve: widget.curve,
+                        ),
+                        Column(
+                          children: _items,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: widget.bottomPadding,
+                ),
+                widget.showToggleButton
+                    ? Divider(
+                        color: widget.unselectedIconColor,
+                        indent: 5,
+                        endIndent: 5,
+                        thickness: 1,
+                      )
+                    : SizedBox(
+                        height: 5,
+                      ),
+                widget.showToggleButton
+                    ? _toggleButton
+                    : SizedBox(
+                        height: widget.iconSize,
+                      ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget get body => Padding(
+        padding: EdgeInsets.only(left: widget.minWidth * 1.1),
+        child: widget.body,
+      );
+
   Widget get _avatar {
     return CollapsibleItemWidget(
+      entry: entry,
       onHoverPointer: widget.onHoverPointer,
       padding: widget.itemPadding,
       offsetX: _offsetX,
@@ -371,6 +308,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar>
         textColor = widget.selectedTextColor;
       }
       return CollapsibleItemWidget(
+        entry: entry,
         onHoverPointer: widget.onHoverPointer,
         padding: widget.itemPadding,
         offsetX: _offsetX,
@@ -395,6 +333,7 @@ class _CollapsibleSidebarState extends State<CollapsibleSidebar>
 
   Widget get _toggleButton {
     return CollapsibleItemWidget(
+      entry: entry,
       onHoverPointer: widget.onHoverPointer,
       padding: widget.itemPadding,
       offsetX: _offsetX,

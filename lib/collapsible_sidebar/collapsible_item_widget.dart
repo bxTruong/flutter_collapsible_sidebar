@@ -1,7 +1,11 @@
+import 'dart:developer';
+
+import 'package:context_menus/context_menus.dart';
 import 'package:flutter/material.dart';
+import 'package:popover/popover.dart';
 
 class CollapsibleItemWidget extends StatefulWidget {
-  const CollapsibleItemWidget({
+  CollapsibleItemWidget({
     required this.onHoverPointer,
     required this.leading,
     required this.title,
@@ -10,6 +14,7 @@ class CollapsibleItemWidget extends StatefulWidget {
     required this.offsetX,
     required this.scale,
     this.onTap,
+    this.entry,
   });
 
   final MouseCursor onHoverPointer;
@@ -18,6 +23,7 @@ class CollapsibleItemWidget extends StatefulWidget {
   final TextStyle textStyle;
   final double offsetX, scale, padding;
   final VoidCallback? onTap;
+  OverlayEntry? entry;
 
   @override
   _CollapsibleItemWidgetState createState() => _CollapsibleItemWidgetState();
@@ -25,6 +31,7 @@ class CollapsibleItemWidget extends StatefulWidget {
 
 class _CollapsibleItemWidgetState extends State<CollapsibleItemWidget> {
   bool _underline = false;
+  final LayerLink layerLink = LayerLink();
 
   @override
   Widget build(BuildContext context) {
@@ -37,20 +44,43 @@ class _CollapsibleItemWidgetState extends State<CollapsibleItemWidget> {
       onExit: (event) {
         setState(() {
           _underline = false;
+
         });
       },
+      onHover: (_) {
+
+        // showPopover(
+        //   context: context,
+        //   transitionDuration: const Duration(milliseconds: 150),
+        //   bodyBuilder: (context) =>Text('abc'),
+        //   onPop: () => print('Popover was popped!'),
+        //   direction: PopoverDirection.right,
+        //   barrierColor: Colors.transparent,
+        //   width: 200,
+        //   height: 400,
+        //   arrowHeight: 15,
+        //   arrowWidth: 30,
+        //   isParentAlive: (){
+        //     return true;
+        //   },
+        // );
+      },
       cursor: widget.onHoverPointer,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: Container(
-          color: Colors.transparent,
-          padding: EdgeInsets.all(widget.padding),
-          child: Stack(
-            alignment: Alignment.centerLeft,
-            children: [
-              widget.leading,
-              _title,
-            ],
+      child: CompositedTransformTarget(
+        link: layerLink,
+        child: TextButton(
+          style: ,
+          onPressed:  widget.onTap,
+          child: Container(
+            color: Colors.transparent,
+            padding: EdgeInsets.all(widget.padding),
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                widget.leading,
+                _title,
+              ],
+            ),
           ),
         ),
       ),

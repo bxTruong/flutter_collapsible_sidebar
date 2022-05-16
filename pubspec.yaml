@@ -12,6 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  context_menus: ^1.0.1
+  popover: ^0.2.6+3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
